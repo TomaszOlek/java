@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS students (
+    studentID TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    age INTEGER NOT NULL,
+    grade REAL NOT NULL
+);

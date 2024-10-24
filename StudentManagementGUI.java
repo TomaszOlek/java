@@ -127,19 +127,47 @@ public class StudentManagementGUI {
             public void actionPerformed(ActionEvent e) {
                 String studentID = studentIDField.getText();
                 String name = nameField.getText();
-                int age = Integer.parseInt(ageField.getText());
-                double grade = Double.parseDouble(gradeField.getText());
+                String ageText = ageField.getText();
+                String gradeText = gradeField.getText();
 
-                if (age <= 0) {
-                    outputArea.setText("Add student: Age must be greater than 0");
-                    return;
-                }
-                if (grade < 0 || grade > 100) {
-                    outputArea.setText("Add student: Grade must be between 0 and 100");
+
+                // Validate
+                if (studentID.isEmpty()) {
+                    outputArea.setText("Update student: StudentID cannot be empty");
                     return;
                 }
 
-                manager.updateStudent(studentID, new Student(name, age, grade, studentID));
+                Student existingStudent = manager.getStudent(studentID);
+
+                if (existingStudent == null) {
+                    outputArea.setText("Update student: Student not found");
+                    return;
+                }
+
+                if (!name.isEmpty()) {
+                    existingStudent.setName(name);
+                }
+
+                if (!ageText.isEmpty()) {
+                    Integer age = Integer.parseInt(ageText);
+                    if (age <= 0) {
+                        outputArea.setText("Update student: Age must be greater than 0");
+                        return;
+                    }
+                    existingStudent.setAge(age);
+                }
+
+                if (!gradeText.isEmpty()) {
+                    double grade = Double.parseDouble(gradeText);
+                    if (grade < 0 || grade > 100) {
+                        outputArea.setText("Update student: Grade must be between 0 and 100");
+                        return;
+                    }
+                    existingStudent.setGrade(grade);
+                }
+
+                //Update student
+                manager.updateStudent(studentID, existingStudent);
                 outputArea.setText("Student updated successfully!");
             }
         });
@@ -149,11 +177,9 @@ public class StudentManagementGUI {
             public void actionPerformed(ActionEvent e) {
                 ArrayList<Student> students = manager.getAllStudents();
                 StringBuilder sb = new StringBuilder();
+                
                 for (Student student : students) {
-                    sb.append("Student ID: ").append(student.getStudentID()).append(", ")
-                      .append("Name: ").append(student.getName()).append(", ")
-                      .append("Age: ").append(student.getAge()).append(", ")
-                      .append("Grade: ").append(student.getGrade()).append("\n");
+                    sb.append(student.displayInfo()).append("\n");
                 }
                 outputArea.setText(sb.toString());
             }

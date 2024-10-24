@@ -26,7 +26,7 @@ public class Student {
   public void setStudentID(String studentID) { this.studentID = studentID; }
 
   // Metoda do wyświetlania informacji
-  public void displayInfo() {
-    System.out.println("StudentID: " + studentID + ", Name: " + name + ", Age: " + age + ", Grade: " + grade);
+  public String displayInfo() {
+    return "StudentID: " + studentID + ", Name: " + name + ", Age: " + age + ", Grade: " + grade;
   }
 }

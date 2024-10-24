@@ -4,6 +4,7 @@ import java.util.ArrayList;
 public class StudentManagerImpl implements StudentManager {
   private Connection connection;
 
+  // Database connection
   private Connection connect() {
     Connection conn = null;
 
@@ -84,6 +85,31 @@ public class StudentManagerImpl implements StudentManager {
     } catch (SQLException e) {
       System.out.println(e.getMessage());
     }
+  }
+
+  public Student getStudent(String studentID) {
+    String sql = "SELECT * FROM students WHERE studentID = ?";
+    Student student = null;
+
+    try (Connection conn = this.connect();
+      PreparedStatement pstmt = conn.prepareStatement(sql)
+    ) {
+      pstmt.setString(1, studentID);
+      ResultSet rs = pstmt.executeQuery();
+
+      if (rs.next()) {
+        student = new Student(rs.getString("name"),
+                              rs.getInt("age"),
+                              rs.getDouble("grade"),
+                              rs.getString("studentID"));
+      }
+
+      conn.close();
+    } catch (SQLException e) {
+      System.out.println(e.getMessage());
+    }
+
+    return student;
   }
 
   // Get all students
